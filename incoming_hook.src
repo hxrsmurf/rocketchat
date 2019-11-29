@@ -9,8 +9,11 @@ class Script {
 
 	let match;
 	
-	match = request.content.data.attributes.from.match(/0001112222/);
-	if (match){
+	match = request.content.data.attributes.from
+	
+	if (match.match(/0001112222/)){
+		customChannel = "#YourCustomChannel-0001112222"
+	} else if (match.match(/0001112222/)){
 		customChannel = "#YourCustomChannel-0001112222"
 	} else {
 		customChannel = "#text"
