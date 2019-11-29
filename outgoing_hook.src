@@ -37,7 +37,7 @@ class Script {
 			return {
 				url: request.url,
 				//url: 'https://api.flowroute.com/v2/messages',
-				headers: {"Content-Type":"application/json", 'Authorization': 'Basic ' + token},
+				headers: {"Content-Type":"application/json", 'Authorization': 'Basic ' + request.data.token},
 				method: 'post',
 				content: text
 			};
