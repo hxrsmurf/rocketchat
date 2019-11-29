@@ -1,0 +1,45 @@
+// https://rocket.chat/docs/administrator-guides/integrations/
+
+class Script {
+	prepare_outgoing_request({ request }) {
+
+		message = request.data.text
+        room = request.data.channel_name
+        room = room.split("\-")
+		
+		let match;
+		match = request.data.text.match(/^help$/);
+		if (match) {
+			return {
+				message: {
+					text: [
+						'**help**',
+						'```',
+						'This references the channel name. Just type your message!',
+						'```'
+					].join('\n')
+				}
+			};
+		} else{
+			// Else send SMS
+
+			var headers =[];
+			headers.push('"Content-Type": "application/json"') //needed to POST to Flowroute
+
+			// https://developer.flowroute.com/api/messages/v2.1/send-an-sms/
+			var text = [];
+				text.push('{')
+				text.push('"to" : "+1' + room[1] + '",')
+				text.push('"from" : "+0001112222",')
+				text.push('"body" : "' + message + '"')
+				text.push('}')
+			return {
+				url: request.url,
+				//url: 'https://api.flowroute.com/v2/messages',
+				headers: {"Content-Type":"application/json", 'Authorization': 'Basic ' + request.data.token},
+				method: 'post',
+				content: text
+			};
+		}
+	}  
+}
