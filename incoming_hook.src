@@ -1,0 +1,23 @@
+// https://rocket.chat/docs/administrator-guides/integrations/
+
+class Script {
+	process_incoming_request({ request }) {
+
+		// https://developer.flowroute.com/api/messages/v2.1/receive-an-sms/
+		// https://developer.flowroute.com/api/messages/v2.1/receive-an-mms/
+		var text =[]
+			text.push('From: ' + request.content.data.attributes.from)
+			text.push(request.content.data.attributes.body)
+
+		if (request.content.data.attributes.is_mms){
+			text.push(request.content.included[0].attributes.url)
+			text.push(request.content.data.attributes.is_mms)
+		}
+
+		return {
+			content:{
+				text: text.join('\n')
+			}
+		};
+	}
+}
