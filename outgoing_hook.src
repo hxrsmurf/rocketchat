@@ -3,19 +3,23 @@
 class Script {
 	prepare_outgoing_request({ request }) {
 
-		parseText = request.data.text
-		number = parseText.split(" ")
-		message = parseText.split("\-")
+		message = request.data.text
+		message = message.split(" ")
+      
+        room = request.data.channel_name
+        room = room.split("\-")
 		
-		match = request.data.text.match(/!text help$/);
+		let match;
+		match = request.data.text.match(/^!text help$/);
+      
 		if (match) {
 			return {
 				message: {
 					text: [
-						'**commands**',
+						'**help**',
 						'```',
-						'!text [Phone Number w/ area code] - [Message]',
-						'!text 0001112222 - Hello World',
+						'If channel is dash separated, just type',
+                      '!text 0001112222 - Hello World',
 						'```'
 					].join('\n')
 				}
@@ -24,16 +28,25 @@ class Script {
 			// Else send SMS
 
 			var headers =[];
-				headers.push('"Content-Type": "application/json"') //needed to POST to Flowroute
+			headers.push('"Content-Type": "application/json"') //needed to POST to Flowroute
 
 			// https://developer.flowroute.com/api/messages/v2.1/send-an-sms/
 			var text = [];
 				text.push('{')
-				text.push('"to" : "+1' + number[1] + '",')
 				text.push('"from" : "+0001112222",')
+          
+          if (room[0].match(/text/)){
+			text.push('"to" : "+1' + message[1] + '",')
+			text.push('"body" : "' + message[2] + '"')
+          } else{
+				text.push('"to" : "+1' + room[1] + '",')
+				message = request.data.text
+				message = message.split('!text ')
 				text.push('"body" : "' + message[1] + '"')
-				text.push('}')
-
+			}
+		  
+			text.push('}')
+			
 			return {
 				url: request.url,
 				//url: 'https://api.flowroute.com/v2/messages',
