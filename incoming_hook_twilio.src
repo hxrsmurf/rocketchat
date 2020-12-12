@@ -1,35 +1,28 @@
 // https://rocket.chat/docs/administrator-guides/integrations/
 // https://www.twilio.com/docs/sms/api/message-resource#message-properties
+// https://www.twilio.com/docs/sms/send-messages
 
 class Script {
-	process_incoming_request({ request }) {	
-		var text = [] 
-		let match; 
-		match = request.content["From"]
-
-		if (match.match(/0001112222/)){
-			customChannel = "#YourCustomChannel-0001112222"
-		} else if (match.match(/0001112222/)){
-			customChannel = "#YourCustomChannel-0001112222"
-		} else {
-			customChannel = "#texts"
-			text.push('From: ' + request.content["From"])
+	process_incoming_request ({ request }) {
+		var text =[]
+		
+		from = (request.content.From).split("\+")
+		body = request.content.Body
+		mms = request.content.MediaUrl0
+		
+		text.push('From: ' + from[1])
+		text.push(body)
+		
+		if (mms) {
+			text.push(mms)
 		}
-
-		//Add remaining content to text array
-		text.push(request.content["Body"])
-      
-      
-        if (request.content["MediaUrl0"]){
-          text.push(request.content["MediaUrl0"])
-        }
-      
-		console.log(request.content);
+	
+		//console.log(request.content);
+		
 		return {
 			content: {
-				text: text.join('\n'),
-				channel: customChannel          
+				text: text.join('\n')
 			}
-		}; 
+		}
 	}
 }
