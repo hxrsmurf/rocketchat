@@ -1,0 +1,21 @@
+// Use RocketChat Outgoing Web Hook to Post to Discord
+// https://support.discord.com/hc/en-us/articles/360045093012
+// https://discord.com/developers/docs/resources/webhook#execute-webhook
+
+class Script {
+	prepare_outgoing_request({ request }) {
+		text = request.data.text
+
+		var message = []
+			message.push('{')
+			message.push('"content" : "' + text + '"')
+			message.push('}')
+
+		return {
+			url: request.url,
+			headers: {"Content-Type":"application/json"},
+			method: 'post',
+			content: message
+		}
+	}
+}
