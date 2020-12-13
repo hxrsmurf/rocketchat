@@ -1,5 +1,7 @@
-# PowerShell script to send SMS via Flowroute API
-# https://developer.flowroute.com/api/messages/v2.1/send-an-sms/
+<#
+	PowerShell script to send SMS via Flowroute API
+	https://developer.flowroute.com/api/messages/v2.1/send-an-sms/
+#>
 
 $username  = ''
 $password = ''
@@ -21,7 +23,6 @@ $body = @{
 	"from" = "+1"
 	"body" = $args[0]
 }
-
 
 $request = Invoke-WebRequest -Uri $url -Headers $Headers -Method POST -Body $body
 $request = $request | convertfrom-json
