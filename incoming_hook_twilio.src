@@ -1,6 +1,8 @@
-// https://rocket.chat/docs/administrator-guides/integrations/
-// https://www.twilio.com/docs/sms/api/message-resource#message-properties
-// https://www.twilio.com/docs/sms/send-messages
+/*
+	https://rocket.chat/docs/administrator-guides/integrations/
+	https://www.twilio.com/docs/sms/api/message-resource#message-properties
+	https://www.twilio.com/docs/sms/send-messages
+*/
 
 class Script {
 	process_incoming_request ({ request }) {
