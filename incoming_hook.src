@@ -1,39 +1,41 @@
-// https://rocket.chat/docs/administrator-guides/integrations/
-// https://developer.flowroute.com/api/messages/v2.1/receive-an-sms/
-// https://developer.flowroute.com/api/messages/v2.1/receive-an-mms/
+/*
+	https://rocket.chat/docs/administrator-guides/integrations/
+	https://developer.flowroute.com/api/messages/v2.1/receive-an-sms/
+	https://developer.flowroute.com/api/messages/v2.1/receive-an-mms/
+*/
 
 class Script {
 	process_incoming_request({ request }) {
-	
-	var text =[]
+		var text =[]
 
-	let match;
-	
-	match = request.content.data.attributes.from
-	
-	if (match.match(/0001112222/)){
-		customChannel = "#YourCustomChannel-0001112222"
-	} else if (match.match(/0001112222/)){
-		customChannel = "#YourCustomChannel-0001112222"
-	} else {
-		customChannel = "#text"
-		text.push('From: ' + request.content.data.attributes.from)
-	}
-	
-	//Add remaining content to text array
-	text.push(request.content.data.attributes.body)
-	
-	//If MMS, include URL
-	if (request.content.data.attributes.is_mms){
-		text.push(request.content.included[0].attributes.url)
-	}
-	
-	//console.log(request.content);
-	return {
-		content:{
-			text: text.join('\n'),
-			channel: customChannel
+		let match;
+		
+		match = request.content.data.attributes.from
+		
+		if (match.match(/0001112222/)){
+			customChannel = "#YourCustomChannel-0001112222"
+		} else if (match.match(/0001112222/)){
+			customChannel = "#YourCustomChannel-0001112222"
+		} else {
+			customChannel = "#text"
+			text.push('From: ' + request.content.data.attributes.from)
 		}
-	}
+		
+		//Add remaining content to text array
+		text.push(request.content.data.attributes.body)
+		
+		//If MMS, include URL
+		if (request.content.data.attributes.is_mms){
+			text.push(request.content.included[0].attributes.url)
+		}
+		
+		//console.log(request.content);
+		
+		return {
+			content:{
+				text: text.join('\n'),
+				channel: customChannel
+			}
+		}
 	}
 }
