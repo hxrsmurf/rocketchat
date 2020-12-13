@@ -2,13 +2,13 @@
 
 class Script {
 	prepare_outgoing_request({ request }) {
-
 		message = request.data.text
         room = request.data.channel_name
         room = room.split("\-")
 		
 		let match;
 		match = request.data.text.match(/^help$/);
+
 		if (match) {
 			return {
 				message: {
@@ -20,9 +20,8 @@ class Script {
 					].join('\n')
 				}
 			};
-		} else{
+		} else {
 			// Else send SMS
-
 			var headers =[];
 			headers.push('"Content-Type": "application/json"') //needed to POST to Flowroute
 
@@ -33,6 +32,7 @@ class Script {
 				text.push('"from" : "+0001112222",')
 				text.push('"body" : "' + message + '"')
 				text.push('}')
+				
 			return {
 				url: request.url,
 				//url: 'https://api.flowroute.com/v2/messages',
