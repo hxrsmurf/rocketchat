@@ -3,6 +3,7 @@
 	https://developer.flowroute.com/api/messages/v2.1/send-an-sms/
 
 	Base64 for user:pass for request.data.token
+	echo -n 'user:pass' | base64
 	https://rocket.chat/docs/administrator-guides/integrations/
 
 	API URL: https://api.flowroute.com/v2/messages
