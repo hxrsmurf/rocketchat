@@ -3,6 +3,10 @@
 These configurations use [Rocket Chat](https://rocket.chat/) to send SMS via [FlowRoute](https://www.flowroute.com/) API.
 
 Release Notes:
+- 2021 August 17
+  -  Added Outgoing webhook for Twilio
+  -  Add Base64 directions
+
 - 2020 Dec 13
   - Updated formatting
   - Added Twilio and Discord WebHooks
