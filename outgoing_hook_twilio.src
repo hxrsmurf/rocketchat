@@ -1,0 +1,130 @@
+/* 
+	Docs:
+		https://www.twilio.com/docs/sms/api/message-resource#create-a-message-resource
+		
+	https://rocket.chat/docs/administrator-guides/integrations/
+	https://stackoverflow.com/questions/35325370/how-do-i-post-a-x-www-form-urlencoded-request-using-fetch
+
+	Base64 for user:pass for request.data.token
+	echo -n 'user:pass' | base64
+	
+*/
+
+class Script {
+	prepare_outgoing_request({ request }) {
+		text = request.data.text
+		room = request.data.channel_name
+		room = room.split("\-")
+
+		// Require specific user
+		if ( request.data.user_name != 'hxrsmurf'){
+			return{message:{text:'You\'re not allowed to use this feature.'}}
+		}
+
+		// Require input
+		if (text === request.data.trigger_word){
+			return{
+				message:{
+					text:[
+						'**Error**: No Input'
+					].join('\n')
+				}
+			}
+		}
+
+		// Help Information
+		if(text.match(/^!text help/)){
+				return {
+				message: {
+					text: [
+						'**Help Guide**',
+						'-------------',
+						'',
+						'*Channel Format*',
+						'```',
+						'Name-[10-digits]',
+						'```',
+						'',
+						'**Usage**',
+						'If In Supported Channel, type',
+						'```',
+						'!text [message]',
+						'```',
+						'Else:',
+						'```',
+						'!text [10-digit number] [message]',
+						'```'
+					].join('\n')
+				}
+			}
+		}
+
+		// Format Variables
+		text = text.split(/^(!text)\s/)
+		number = text[2].match(/^(\d){10}\s/)
+
+		// Require text after phone number
+		if(text[2].length === 10){
+			return{
+				message:{
+					text:[
+						'**Error**: No Input'
+					].join('\n')
+				}
+			}
+		}
+
+		// Require 10-digit phone number in non-supported channels
+		if(room.length != 2){
+			if (!number){
+				return{
+					message:{
+						text:[
+							'Error:',
+							'```',
+							'Enter A 10-digit Phone Number',
+							'```'
+						].join('\n')
+					}
+				}
+			}
+		}
+
+		if (text){
+			var headers =[]
+				headers.push('"Content-Type": "application/x-www-form-urlencoded"') //Required to correctly POST to Twilio			
+			
+			number = text[2].toString().substring(0,10)
+			text = text.toString().split(/\d{10}\s/)
+			
+			var details = {
+				// E.164 format
+				'From' : '',
+				'To' :'+1' + number,
+				'Body': text[1]
+			};
+			
+			// Convert to URL Encoded format
+			var message = [];
+			for (var property in details) {
+				var encodedKey = encodeURIComponent(property);
+				var encodedValue = encodeURIComponent(details[property]);
+				message.push(encodedKey + "=" + encodedValue);
+			}
+			message = message.join("&");
+			
+			console.log(message)
+			
+			// POST to Twilio API
+			return {
+				url: request.url,
+				headers: {"Content-Type":"application/x-www-form-urlencoded", 'Authorization': 'Basic ' + request.data.token},
+				method: 'post',
+				content: message
+			}
+		} else {
+			// Require content
+			return false
+		}
+	}
+}
