@@ -1,0 +1,21 @@
+class Script {
+	process_incoming_request({ request }) {
+		var text =[]
+
+		customChannel = "#BunnyCDN"
+		
+		console.log(request.content);
+		
+		text.push('VideoLibraryId: ' + request.content.VideoLibraryId)
+		text.push('VideoGuid: ' + request.content.VideoGuid)		
+		text.push('Status: ' + request.content.Status) // 3 is complete
+		
+		
+		return {
+			content:{
+				text: text.join('\n'),
+				channel: customChannel
+			}
+		}
+	}
+}
